@@ -52,7 +52,7 @@ def get_exchange(exchange_name: str, kis_number=None):
 
         return Exchange(**payload)
 
-    elif exchange_name in ("KRX", "NASDAQ", "NYSE", "AMEX"):
+    elif exchange_name in ("KRX", "NASDAQ", "NYSE", "AMEX", "CME_MINI"):
         _kis = f"KIS{kis_number}"
         key = check_key(_kis)
         KEY, SECRET, ACCOUNT_NUMBER, ACCOUNT_CODE = key
@@ -65,7 +65,7 @@ def get_exchange(exchange_name: str, kis_number=None):
 
 
 def get_bot(
-    exchange_name: Literal["BINANCE", "UPBIT", "BYBIT", "BITGET", "KRX", "NASDAQ", "NYSE", "AMEX", "OKX"],
+    exchange_name: Literal["BINANCE", "UPBIT", "BYBIT", "BITGET", "KRX", "NASDAQ", "NYSE", "AMEX", "OKX", "CME_MINI"],
     kis_number=None,
 ) -> Binance | Upbit | Bybit | Bitget | KoreaInvestment | Okx:
     exchange_name = exchange_name.upper()
