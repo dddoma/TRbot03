@@ -3,7 +3,7 @@ from typing import Literal
 from pydantic import BaseModel
 
 korea_stocks = ("KRX")
-us_stocks = ("NASDAQ", "NYSE", "AMEX")
+us_stocks = ("NASDAQ", "NYSE", "AMEX","CME_MINI")
 
 
 class BaseUrls(str, Enum):
@@ -44,10 +44,11 @@ class TransactionId(str, Enum):
     korea_paper_sell = "VTTC0801U"
     korea_paper_cancel = "VTTC0803U"
 
-    #usa_buy = "JTTT1002U"
-    #usa_sell = "JTTT1006U"
-    usa_buy = "OTFM3001U"
-    usa_sell = "OTFM3001U"
+    usa_buy = "JTTT1002U"
+    usa_sell = "JTTT1006U"
+    
+    ovs_buy = "OTFM3001U"
+    ovs_sell = "OTFM3001U"
     
     usa_paper_buy = "VTTT1002U"
     usa_paper_sell = "VTTT1001U"
@@ -71,13 +72,13 @@ class ExchangeCode(str, Enum):
     NYSE = "NYSE"
     NASDAQ = "NASD"
     AMEX = "AMEX"
-
+    MESZ23 = "CME_MINI"
 
 class QueryExchangeCode(str, Enum):
     NYSE = "NYS"
     NASDAQ = "NAS"
     AMEX = "AMS"
-    MES = "CME_MINI"
+    MESZ23 = "CME_MINI"
     
 
 
@@ -131,14 +132,11 @@ class UsaBuyOrderHeaders(BaseHeaders):
 class UsaSellOrderHeaders(BaseHeaders):
     tr_id: str = TransactionId.usa_sell.value
 
+class OvsBuyOrderHeaders(BaseHeaders):
+    tr_id: str = TransactionId.ovs_buy.value
 
-class UsaPaperBuyOrderHeaders(BaseHeaders):
-    tr_id: str = TransactionId.usa_paper_buy.value
-
-
-class UsaPaperSellOrderHeaders(BaseHeaders):
-    tr_id: str = TransactionId.usa_paper_sell.value
-
+class OvsSellOrderHeaders(BaseHeaders):
+    tr_id: str = TransactionId.ovs_sell.value
 
 class AccountInfo(BaseModel):
     CANO: str           # 계좌번호 앞 8자리
@@ -166,9 +164,20 @@ class KoreaMarketOrderBody(KoreaOrderBody):
 class UsaOrderBody(OrderBody):
     ORD_DVSN: str = UsaOrderType.limit.value  # 주문구분
     OVRS_ORD_UNPR: str  # 주문가격
-    OVRS_EXCG_CD: Literal[ExchangeCode.NYSE, ExchangeCode.NASDAQ, ExchangeCode.AMEX]   # 거래소코드  NASD : 나스닥, NYSE: 뉴욕, AMEX: 아멕스
+    OVRS_EXCG_CD: Literal[ExchangeCode.NYSE, ExchangeCode.NASDAQ, ExchangeCode.AMEX, ExchangeCode.CME_MINI ]   # 거래소코드  NASD : 나스닥, NYSE: 뉴욕, AMEX: 아멕스
     ORD_SVR_DVSN_CD: str = "0"
 
+class OvsOrderBody(OrderBody):
+    OVRS_FUTR_FX_PDNO: str
+    SLL_BUY_DVSN_CD: str
+    PRIC_DVSN_CD: str
+    FM_LIMIT_ORD_PRIC: str
+    FM_STOP_ORD_PRIC: str
+    FM_ORD_QTY: str
+    CCLD_CNDT_CD: str
+    CPLX_ORD_DVSN_CD: str
+    ECIS_RSVN_ORD_YN: str
+    FM_HDGE_ORD_SCRN_YN: str
 
 # class OrderType(str, Enum):
 #     limit = "limit"
