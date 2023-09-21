@@ -25,7 +25,8 @@ class Endpoints(str, Enum):
     korea_order = f"{korea_order_base}/trading/order-cash"
     korea_order_buyable = f"{korea_order_base}/trading/inquire-psbl-order"
 
-    usa_order_base = "/uapi/overseas-stock/v1"
+    usa_order_base = "/uapi/overseas-futureoption/v1"
+    # usa_order_base = "/uapi/overseas-stock/v1"
     usa_order = f"{usa_order_base}/trading/order"
     usa_order_buyable = f"{usa_order_base}/trading/inquire-psamount"
     usa_current_price = f"/uapi/overseas-price/v1/quotations/price"
@@ -43,9 +44,11 @@ class TransactionId(str, Enum):
     korea_paper_sell = "VTTC0801U"
     korea_paper_cancel = "VTTC0803U"
 
-    usa_buy = "JTTT1002U"
-    usa_sell = "JTTT1006U"
-
+    #usa_buy = "JTTT1002U"
+    #usa_sell = "JTTT1006U"
+    usa_buy = "OTFM3001U"
+    usa_sell = "OTFM3001U"
+    
     usa_paper_buy = "VTTT1002U"
     usa_paper_sell = "VTTT1001U"
 
@@ -74,6 +77,8 @@ class QueryExchangeCode(str, Enum):
     NYSE = "NYS"
     NASDAQ = "NAS"
     AMEX = "AMS"
+    MES = "CME_MINI"
+    
 
 
 class KoreaOrderType(str, Enum):
