@@ -13,7 +13,7 @@ STOCK_LITERAL = Literal[
     "NASDAQ",
     "NYSE",
     "AMEX",
-    "BATS"
+    "CME_MINI",
 ]
 
 
@@ -72,6 +72,7 @@ STOCK_EXCHANGES = (
     "NASDAQ",
     "NYSE",
     "AMEX",
+    "CME_MINI",
 )
 
 COST_BASED_ORDER_EXCHANGES = ("UPBIT", "BYBIT", "BITGET")
@@ -82,6 +83,7 @@ NO_ORDER_AMOUNT_OUTPUT_EXCHANGES = (
     "NASDAQ",
     "NYSE",
     "AMEX",
+    "CME_MINI"
 )
 
 # "BITGET", "KRX", "NASDAQ", "AMEX", "NYSE")
@@ -208,7 +210,7 @@ class OrderRequest(BaseModel):
     stop_price: float | None = None
     profit_price: float | None = None
     order_name: str = "주문"
-    kis_number: int | None = 1
+    kis_number: int | None = 3
     hedge: str | None = None
     unified_symbol: str | None = None
     is_crypto: bool | None = None
