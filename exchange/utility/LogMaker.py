@@ -86,7 +86,7 @@ def log_order_message(exchange_name, order_result: dict, order_info: MarketOrder
     else:
         f_name = "수량"
         amount = None
-        if exchange_name in ("KRX", "NASDAQ", "AMEX", "NYSE"):
+        if exchange_name in ("KRX", "NASDAQ", "AMEX", "NYSE", "CME_MINI"):
             if order_info.amount is not None:
                 amount = str(order_info.amount)
             elif order_info.percent is not None:
@@ -145,7 +145,7 @@ def log_order_message(exchange_name, order_result: dict, order_info: MarketOrder
         elif order_info.is_sell:
             side = "매도"
 
-    if exchange_name in STOCK_EXCHANGES:  # ("KRX", "NASDAQ", "NYSE", "AMEX"):
+    if exchange_name in STOCK_EXCHANGES:  # ("KRX", "NASDAQ", "NYSE", "AMEX", "CME_MINI"):
         content = f"일시\n{date}\n\n거래소\n{exchange_name}\n\n티커\n{order_info.base}\n\n거래유형\n{side}\n\n{amount}"
         embed = Embed(
             title=order_info.order_name,
