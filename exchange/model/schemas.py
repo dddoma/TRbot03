@@ -181,7 +181,7 @@ def parse_quote(quote: str):
 
 class OrderRequest(BaseModel):
     exchange: EXCHANGE_LITERAL
-    base: str
+    base: str | None = None
     quote: QUOTE_LITERAL
     # QUOTE
     type: Literal["market", "limit"] = "market"
