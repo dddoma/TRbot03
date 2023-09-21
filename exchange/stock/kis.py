@@ -26,11 +26,17 @@ class KoreaInvestment:
 
         self.base_body = {}
         self.base_order_body = AccountInfo(CANO=account_number, ACNT_PRDT_CD=account_code)
-        self.order_exchange_code = {"NASDAQ": ExchangeCode.NASDAQ, "NYSE": ExchangeCode.NYSE, "AMEX": ExchangeCode.AMEX}
+        self.order_exchange_code = {
+            "NASDAQ": ExchangeCode.NASDAQ, 
+            "NYSE": ExchangeCode.NYSE, 
+            "AMEX": ExchangeCode.AMEX,
+            "CME_MINI": ExchangeCode.CME_MINI,
+        }
         self.query_exchange_code = {
             "NASDAQ": QueryExchangeCode.NASDAQ,
             "NYSE": QueryExchangeCode.NYSE,
             "AMEX": QueryExchangeCode.AMEX,
+            "CME_MINI": QueryExchangeCode.CME_MINI,
         }
 
     def init_info(self, order_info: MarketOrder):
@@ -131,7 +137,7 @@ class KoreaInvestment:
     @validate_arguments
     def create_order(
         self,
-        exchange: Literal["KRX", "NASDAQ", "NYSE", "AMEX"],
+        exchange: Literal["KRX", "NASDAQ", "NYSE", "AMEX","CME_MINI"],
         ticker: str,
         order_type: Literal["limit", "market"],
         side: Literal["buy", "sell"],
@@ -160,7 +166,7 @@ class KoreaInvestment:
                 body |= KoreaOrderBody(
                     **body, PDNO=ticker, ORD_DVSN=KoreaOrderType.limit, ORD_QTY=amount, ORD_UNPR=price
                 )
-        elif exchange in ("NASDAQ", "NYSE", "AMEX"):
+        elif exchange in ("NASDAQ", "NYSE", "AMEX", "CME_MINI"):
             exchange_code = self.order_exchange_code.get(exchange)
             current_price = self.fetch_current_price(exchange, ticker)
             price = current_price + mintick * 50 if side == "buy" else current_price - mintick * 50
@@ -193,7 +199,7 @@ class KoreaInvestment:
         return self.post(endpoint, body, headers)
 
     def create_market_buy_order(
-        self, exchange: Literal["KRX", "NASDAQ", "NYSE", "AMEX"], ticker: str, amount: int, price: int = 0
+        self, exchange: Literal["KRX", "NASDAQ", "NYSE", "AMEX", "CME_MINI"], ticker: str, amount: int, price: int = 0
     ):
         if exchange == "KRX":
             return self.create_order(exchange, ticker, "market", "buy", amount)
@@ -201,7 +207,7 @@ class KoreaInvestment:
             return self.create_order(exchange, ticker, "market", "buy", amount, price)
 
     def create_market_sell_order(
-        self, exchange: Literal["KRX", "NASDAQ", "NYSE", "AMEX"], ticker: str, amount: int, price: int = 0
+        self, exchange: Literal["KRX", "NASDAQ", "NYSE", "AMEX","CME_MINI"], ticker: str, amount: int, price: int = 0
     ):
         if exchange == "KRX":
             return self.create_order(exchange, ticker, "market", "sell", amount)
@@ -217,12 +223,12 @@ class KoreaInvestment:
     def create_usa_market_buy_order(self, ticker: str, amount: int, price: int):
         return self.create_market_buy_order("usa", ticker, amount, price)
 
-    def fetch_ticker(self, exchange: Literal["KRX", "NASDAQ", "NYSE", "AMEX"], ticker: str):
+    def fetch_ticker(self, exchange: Literal["KRX", "NASDAQ", "NYSE", "AMEX","CME_MINI"], ticker: str):
         if exchange == "KRX":
             endpoint = Endpoints.korea_ticker.value
             headers = KoreaTickerHeaders(**self.base_headers).dict()
             query = KoreaTickerQuery(FID_INPUT_ISCD=ticker).dict()
-        elif exchange in ("NASDAQ", "NYSE", "AMEX"):
+        elif exchange in ("NASDAQ", "NYSE", "AMEX","CME_MINI"):
             exchange_code = self.query_exchange_code.get(exchange)
             endpoint = Endpoints.usa_ticker.value
             headers = UsaTickerHeaders(**self.base_headers).dict()
@@ -234,7 +240,7 @@ class KoreaInvestment:
         try:
             if exchange == "KRX":
                 return float(self.fetch_ticker(exchange, ticker)["stck_prpr"])
-            elif exchange in ("NASDAQ", "NYSE", "AMEX"):
+            elif exchange in ("NASDAQ", "NYSE", "AMEX","CME_MINI"):
                 return float(self.fetch_ticker(exchange, ticker)["last"])
 
         except KeyError:
