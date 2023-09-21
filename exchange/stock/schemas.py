@@ -25,12 +25,14 @@ class Endpoints(str, Enum):
     korea_order = f"{korea_order_base}/trading/order-cash"
     korea_order_buyable = f"{korea_order_base}/trading/inquire-psbl-order"
 
-    usa_order_base = "/uapi/overseas-futureoption/v1"
-    # usa_order_base = "/uapi/overseas-stock/v1"
+    usa_order_base = "/uapi/overseas-stock/v1"
     usa_order = f"{usa_order_base}/trading/order"
     usa_order_buyable = f"{usa_order_base}/trading/inquire-psamount"
     usa_current_price = f"/uapi/overseas-price/v1/quotations/price"
 
+    ovs_order_base = "/uapi/overseas-futureoption/v1"
+    ovs_order = f"{usa_order_base}/trading/order"
+    
     korea_ticker = "/uapi/domestic-stock/v1/quotations/inquire-price"
     usa_ticker = "/uapi/overseas-price/v1/quotations/price"
 
@@ -50,9 +52,6 @@ class TransactionId(str, Enum):
     ovs_buy = "OTFM3001U"
     ovs_sell = "OTFM3001U"
     
-    usa_paper_buy = "VTTT1002U"
-    usa_paper_sell = "VTTT1001U"
-
     korea_ticker = "FHKST01010100"
     usa_ticker = "HHDFS00000300"
 
